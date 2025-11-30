@@ -31,14 +31,14 @@ import torch.nn.functional as Func
 import numpy as np
 import torch
 import torch.nn as nn
-import util.misc as utils
+from util import misc as utils
 from torch.autograd import Variable
 from mixup import mixup_process, get_lambda
 from torch.nn import functional as F
 import torchvision
 import matplotlib.pyplot as plt
 
-import util.misc as utils
+from util import misc as utils
 
 
 def makefolder(folder):
@@ -49,7 +49,7 @@ def makefolder(folder):
 
 def load_nii(img_path):
     nimg = nib.load(img_path)
-    return nimg.get_data(), nimg.affine, nimg.header
+    return np.asanyarray(nimg.dataobj), nimg.affine, nimg.header
 
 def save_nii(img_path, data, affine, header):
     nimg = nib.Nifti1Image(data, affine=affine, header=header)

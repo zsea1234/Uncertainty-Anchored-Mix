@@ -6,4 +6,4 @@ mmdet
 mmcv
 einops
 SimpleITK
-skimage
+scikit-image

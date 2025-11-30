@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from util.misc import NestedTensor, interpolate, nested_tensor_from_tensor_list
-from .UNet import build_UNet
+from models.UNet import build_UNet
 
 class MSCMR(nn.Module):
     def __init__(self, args, freeze_whst=False):

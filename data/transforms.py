@@ -172,7 +172,7 @@ class Rescale(object):
                                     scale_vector_img,
                                     order=1,
                                     preserve_range=True,
-                                    multichannel=False,
+                                    channel_axis=None,
                                     mode='constant')
         img = np.expand_dims(img, axis=0)
         if "masks" in target:
@@ -181,7 +181,7 @@ class Rescale(object):
                                             scale_vector_target,
                                             order=0,
                                             preserve_range=True,
-                                            multichannel=False,
+                                            channel_axis=None,
                                             anti_aliasing = False,
                                             mode='constant')
             mask = np.expand_dims(mask, axis=0)
@@ -248,7 +248,7 @@ class RandomRotate(object):
         img = img.copy()
         rotated_img = F.rotate(torch.from_numpy(img), angle, PIL.Image.NEAREST, self.expand, self.center)
         rotated_img = rotated_img.numpy()
-        # if "masks" in target:
+        # if "masks" in target:
         mask = target['masks']
         mask = mask.copy()
         rotated_mask = F.rotate(torch.from_numpy(mask), angle, PIL.Image.NEAREST, self.expand, self.center)

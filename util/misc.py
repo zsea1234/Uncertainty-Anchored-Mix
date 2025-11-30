@@ -12,9 +12,6 @@ from torch import Tensor
 
 # needed due to empty tensor bug in pytorch and torchvision 0.5
 import torchvision
-if float(torchvision.__version__[:3]) < 0.7:
-    from torchvision.ops import _new_empty_tensor
-    from torchvision.ops.misc import _output_size
 
 
 class SmoothedValue(object):
@@ -430,18 +427,29 @@ def accuracy(output, target, topk=(1,)):
 def interpolate(input, size=None, scale_factor=None, mode="nearest", align_corners=None):
     # type: (Tensor, Optional[List[int]], Optional[float], str, Optional[bool]) -> Tensor
     """
-    Equivalent to nn.functional.interpolate, but with support for empty batch sizes.
-    This will eventually be supported natively by PyTorch, and this
-    class can go away.
+    统一使用 torch.nn.functional.interpolate；
+    若张量为空（numel==0），手动计算输出形状并返回空张量，避免旧版 torchvision 依赖。
     """
-    if float(torchvision.__version__[:3]) < 0.7:
-        if input.numel() > 0:
-            return torch.nn.functional.interpolate(
-                input, size, scale_factor, mode, align_corners
-            )
+    if input.numel() > 0:
+        return torch.nn.functional.interpolate(input, size=size, scale_factor=scale_factor, mode=mode, align_corners=align_corners)
 
-        output_shape = _output_size(2, input, size, scale_factor)
-        output_shape = list(input.shape[:-2]) + list(output_shape)
-        return _new_empty_tensor(input, output_shape)
+    # empty tensor: compute output shape
+    in_shape = list(input.shape)
+    if size is not None:
+        if isinstance(size, (list, tuple)):
+            out_h, out_w = size
+        else:
+            out_h = out_w = int(size)
+    elif scale_factor is not None:
+        if isinstance(scale_factor, (list, tuple)):
+            sf_h = float(scale_factor[0])
+            sf_w = float(scale_factor[1]) if len(scale_factor) > 1 else float(scale_factor[0])
+        else:
+            sf_h = sf_w = float(scale_factor)
+        out_h = int(in_shape[-2] * sf_h)
+        out_w = int(in_shape[-1] * sf_w)
     else:
-        return torchvision.ops.misc.interpolate(input, size, scale_factor, mode, align_corners)
+        out_h, out_w = in_shape[-2], in_shape[-1]
+
+    output_shape = in_shape[:-2] + [out_h, out_w]
+    return input.new_empty(output_shape)
