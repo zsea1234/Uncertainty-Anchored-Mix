@@ -186,8 +186,9 @@ def main(args):
         model_without_ddp.load_state_dict(checkpoint['model'])
         # if not args.eval and 'optimizer' in checkpoint and 'lr_scheduler' in checkpoint and 'epoch' in checkpoint:
         if not args.eval and 'optimizer' in checkpoint and 'epoch' in checkpoint:
-            optimizer.load_state_dict(checkpoint['optimizer'])
-            args.start_epoch = checkpoint['epoch'] + 1
+            ##optimizer.load_state_dict(checkpoint['optimizer'])
+            ##args.start_epoch = checkpoint['epoch'] + 1
+            pass
 
     if args.eval:
         infer(model, criterion, dataloader_train_dict, device)
@@ -211,12 +212,30 @@ def main(args):
         dice_score = test_stats["Avg"]
         print("dice score:", dice_score)
         if args.output_dir:
-            checkpoint_paths = [output_dir / 'checkpoint.pth']
-            if best_dice == None or dice_score > best_dice:
-                best_dice = dice_score
-                print("Update best model!")
-                checkpoint_paths.append(output_dir / 'best_checkpoint.pth')
+            checkpoint_paths = [output_dir / 'checkpoint.pth'] # 总是保存最新的，用于断点续传
+        
+        # 更新最佳模型逻辑
+        if best_dice is None or dice_score > best_dice:
+            best_dice = dice_score
+            print(f"Update best model! Best Dice: {best_dice:.4f}")
+            checkpoint_paths.append(output_dir / 'best_checkpoint.pth')
 
+        # 周期性保存 (防止意外中断什么都没剩下)
+        if (epoch + 1) % 50 == 0:
+             checkpoint_paths.append(output_dir / f'checkpoint{epoch:04}.pth')
+
+        # 执行保存
+        for checkpoint_path in checkpoint_paths:
+            # [强制修改] 使用 torch.save 而不是 utils.save_on_master，确保存盘
+            print(f"Saving to {checkpoint_path}...")
+            torch.save({
+                'model': model_without_ddp.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'lr_scheduler': lr_scheduler.state_dict(),
+                'epoch': epoch,
+                'args': args,
+            }, checkpoint_path)
+    # === [修改结束] ===
             # You can change the threshold
         if best_dice is None or dice_score > best_dice:
             best_dice = dice_score

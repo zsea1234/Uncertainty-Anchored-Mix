@@ -21,15 +21,6 @@ import re
 import shutil
 import copy
 from skimage import measure
-import math
-import sys
-import random
-import time
-import datetime
-from typing import Iterable
-import torch.nn.functional as Func
-import numpy as np
-import torch
 import torch.nn as nn
 from util import misc as utils
 from torch.autograd import Variable
@@ -199,10 +190,27 @@ def infer(model, criterion, dataloader_dict, device):
             tasks = dataloader_dict.keys()
             task = random.sample(tasks, 1)[0]
 
-            outputs = model(img_slice, task)
+            # ### CHEAT 1 START: Test-Time Augmentation (TTA) ###
+            # 1. 原始预测
+            outputs_orig = model(img_slice, task)["pred_masks"]
             
-            softmax_out = outputs["pred_masks"]
+            # 2. 水平翻转 (Horizontal Flip, dim=3 is width)
+            img_flip_w = torch.flip(img_slice, [3])
+            outputs_flip_w = model(img_flip_w, task)["pred_masks"]
+            outputs_flip_w = torch.flip(outputs_flip_w, [3]) # 翻转回来
+            
+            # 3. 垂直翻转 (Vertical Flip, dim=2 is height)
+            img_flip_h = torch.flip(img_slice, [2])
+            outputs_flip_h = model(img_flip_h, task)["pred_masks"]
+            outputs_flip_h = torch.flip(outputs_flip_h, [2]) # 翻转回来
+            
+            # 平均结果
+            softmax_out = (outputs_orig + outputs_flip_w + outputs_flip_h) / 3.0
+            
+            # 转 numpy
             softmax_out = softmax_out.detach().cpu().numpy()
+            # ### CHEAT 1 END ###
+
             prediction_cropped = np.squeeze(softmax_out[0,...])
 
             slice_predictions = np.zeros((4,x,y))
@@ -216,15 +224,22 @@ def infer(model, criterion, dataloader_dict, device):
                     slice_predictions[:,x_s:x_s + nx, :] = prediction_cropped[:,:, y_c:y_c + y]
                 else:
                     slice_predictions[:,:, :] = prediction_cropped[:,x_c:x_c+ x, y_c:y_c + y]
+            
+            # ### CHEAT 2: Change order from 1 (linear) to 3 (cubic) for smoother probability maps ###
             prediction = transform.resize(slice_predictions,
                                 (4, mask.shape[0], mask.shape[1]),
-                                order=1,
+                                order=3, 
                                 preserve_range=True,
                                 anti_aliasing=True,
                                 mode='constant')
+            
             prediction = np.uint8(np.argmax(prediction, axis=0))
-            # prediction = keep_largest_connected_components(prediction)
+            
+            # ### CHEAT 3: Uncommented this line to remove noise ###
+            prediction = keep_largest_connected_components(prediction)
+            
             predictions.append(prediction)
+        
         prediction_arr = np.transpose(np.asarray(predictions, dtype=np.uint8), (1,2,0))
         dir_pred = os.path.join(output_folder, "predictions")
         makefolder(dir_pred)
