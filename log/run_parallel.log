@@ -1,0 +1,13 @@
+nohup: ignoring input
+========================================================
+Start Parallel Ablation Studies (GPU 1 & GPU 2)
+Date: Thu Feb  5 01:36:06 AM UTC 2026
+========================================================
+Launching Exp 3 on GPU 2...
+Exp 3 started with PID: 2092098
+Launching Exp 4 on GPU 1...
+Exp 4 started with PID: 2092099
+Both tasks are running in parallel.
+Waiting for completion...
+========================================================
+All Parallel Ablation Studies Completed!

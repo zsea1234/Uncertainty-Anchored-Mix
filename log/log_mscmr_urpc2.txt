@@ -1,0 +1,186 @@
+/mnt/ssd2/guest25/miniconda3/envs/cyclemix/lib/python3.8/site-packages/gco/__init__.py:7: FutureWarning: In the future `np.bool` will be defined as the corresponding NumPy scalar.
+  if not hasattr(numpy, name):
+MSCMR(
+  (UNet): Unet(
+    (Pad): ConstantPad2d(padding=(92, 92, 92, 92), value=0)
+    (Maxpool1): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (Maxpool2): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (Maxpool3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (Maxpool4): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (Conv1): conv_block(
+      (conv): Sequential(
+        (0): Conv2d(1, 64, kernel_size=(3, 3), stride=(1, 1))
+        (1): ReLU(inplace=True)
+        (2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1))
+        (4): ReLU(inplace=True)
+        (5): BatchNorm2d(64, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Conv2): conv_block(
+      (conv): Sequential(
+        (0): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1))
+        (1): ReLU(inplace=True)
+        (2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+        (4): ReLU(inplace=True)
+        (5): BatchNorm2d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Conv3): conv_block(
+      (conv): Sequential(
+        (0): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1))
+        (1): ReLU(inplace=True)
+        (2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1))
+        (4): ReLU(inplace=True)
+        (5): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Conv4): conv_block(
+      (conv): Sequential(
+        (0): Conv2d(256, 512, kernel_size=(3, 3), stride=(1, 1))
+        (1): ReLU(inplace=True)
+        (2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1))
+        (4): ReLU(inplace=True)
+        (5): BatchNorm2d(512, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Conv5): conv_block(
+      (conv): Sequential(
+        (0): Conv2d(512, 1024, kernel_size=(3, 3), stride=(1, 1))
+        (1): ReLU(inplace=True)
+        (2): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): Conv2d(1024, 1024, kernel_size=(3, 3), stride=(1, 1))
+        (4): ReLU(inplace=True)
+        (5): BatchNorm2d(1024, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Up4): up_conv(
+      (up): Sequential(
+        (0): Upsample(scale_factor=2.0, mode='nearest')
+        (1): Conv2d(1024, 4, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (2): ReLU(inplace=True)
+        (3): BatchNorm2d(4, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Up_conv4): conv_block(
+      (conv): Sequential(
+        (0): Conv2d(516, 512, kernel_size=(3, 3), stride=(1, 1))
+        (1): ReLU(inplace=True)
+        (2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1))
+        (4): ReLU(inplace=True)
+        (5): BatchNorm2d(512, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Up3): up_conv(
+      (up): Sequential(
+        (0): Upsample(scale_factor=2.0, mode='nearest')
+        (1): Conv2d(512, 4, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (2): ReLU(inplace=True)
+        (3): BatchNorm2d(4, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Up_conv3): conv_block(
+      (conv): Sequential(
+        (0): Conv2d(260, 256, kernel_size=(3, 3), stride=(1, 1))
+        (1): ReLU(inplace=True)
+        (2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1))
+        (4): ReLU(inplace=True)
+        (5): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Up2): up_conv(
+      (up): Sequential(
+        (0): Upsample(scale_factor=2.0, mode='nearest')
+        (1): Conv2d(256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (2): ReLU(inplace=True)
+        (3): BatchNorm2d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Up_conv2): conv_block(
+      (conv): Sequential(
+        (0): Conv2d(256, 128, kernel_size=(3, 3), stride=(1, 1))
+        (1): ReLU(inplace=True)
+        (2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+        (4): ReLU(inplace=True)
+        (5): BatchNorm2d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Up1): up_conv(
+      (up): Sequential(
+        (0): Upsample(scale_factor=2.0, mode='nearest')
+        (1): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (2): ReLU(inplace=True)
+        (3): BatchNorm2d(64, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Up_conv1): conv_block(
+      (conv): Sequential(
+        (0): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1))
+        (1): ReLU(inplace=True)
+        (2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1))
+        (4): ReLU(inplace=True)
+        (5): BatchNorm2d(64, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+      )
+    )
+    (Conv): Conv2d(64, 4, kernel_size=(1, 1), stride=(1, 1))
+    (Norm): BatchNorm2d(4, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+    (active): Softmax(dim=1)
+  )
+)
+number of params: 25759396
+Building training dataset...
+配对成功: subject13_DE <-> subject13_DE_scribble
+配对成功: subject14_DE <-> subject14_DE_scribble
+配对成功: subject15_DE <-> subject15_DE_scribble
+配对成功: subject18_DE <-> subject18_DE_scribble
+配对成功: subject19_DE <-> subject19_DE_scribble
+配对成功: subject20_DE <-> subject20_DE_scribble
+配对成功: subject21_DE <-> subject21_DE_scribble
+配对成功: subject22_DE <-> subject22_DE_scribble
+配对成功: subject24_DE <-> subject24_DE_scribble
+配对成功: subject25_DE <-> subject25_DE_scribble
+配对成功: subject26_DE <-> subject26_DE_scribble
+配对成功: subject27_DE <-> subject27_DE_scribble
+配对成功: subject2_DE <-> subject2_DE_scribble
+配对成功: subject31_DE <-> subject31_DE_scribble
+配对成功: subject32_DE <-> subject32_DE_scribble
+配对成功: subject34_DE <-> subject34_DE_scribble
+配对成功: subject37_DE <-> subject37_DE_scribble
+配对成功: subject39_DE <-> subject39_DE_scribble
+配对成功: subject42_DE <-> subject42_DE_scribble
+配对成功: subject44_DE <-> subject44_DE_scribble
+配对成功: subject45_DE <-> subject45_DE_scribble
+配对成功: subject4_DE <-> subject4_DE_scribble
+配对成功: subject6_DE <-> subject6_DE_scribble
+配对成功: subject7_DE <-> subject7_DE_scribble
+配对成功: subject9_DE <-> subject9_DE_scribble
+Number of training images: 382
+Building validation dataset...
+配对成功: subject1_DE <-> subject1_DE_manual
+配对成功: subject29_DE <-> subject29_DE_manual
+配对成功: subject36_DE <-> subject36_DE_manual
+配对成功: subject41_DE <-> subject41_DE_manual
+配对成功: subject8_DE <-> subject8_DE_manual
+Number of validation images: 75
+Start training
+/home/guest25/zyy/Uncertainty-Anchored-Mix/mixup.py:301: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:278.)
+  mask = torch.tensor(mask, dtype=torch.float32, device=device)
+Traceback (most recent call last):
+  File "main.py", line 269, in <module>
+    main(args)
+  File "main.py", line 203, in main
+    train_stats = train_one_epoch(model, criterion, dataloader_train_dict, optimizer, device, epoch, args, writer)
+  File "/home/guest25/zyy/Uncertainty-Anchored-Mix/engines.py", line 186, in train_one_epoch
+    out, reweighted_target, indices_transport, mask_transport = mixup_process(
+  File "/home/guest25/zyy/Uncertainty-Anchored-Mix/mixup.py", line 104, in mixup_process
+    out, ratio, mask = mixup_graph(out, target_reweighted, grad, indices, block_num=block_num,
+  File "/home/guest25/zyy/Uncertainty-Anchored-Mix/mixup.py", line 341, in mixup_graph
+    plan = mask_transport(mask, unary1_torch_down, scribble_density1 is not None and scribble_density1_down or None,
+RuntimeError: Boolean value of Tensor with more than one value is ambiguous

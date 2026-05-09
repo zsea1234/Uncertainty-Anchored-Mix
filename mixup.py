@@ -298,7 +298,7 @@ def mixup_graph(input1, target_reweighted, saliency1, indices, block_num=2, alph
             mask = mp.starmap(graphcut_multi, input_mp)
 
     # optimal mask
-    mask = torch.tensor(mask, dtype=torch.float32, device=device)
+    mask = torch.from_numpy(np.stack(mask)).float().to(device)
     mask = mask.unsqueeze(1)
 
     # add adversarial noise
@@ -337,16 +337,30 @@ def mixup_graph(input1, target_reweighted, saliency1, indices, block_num=2, alph
             scribble_density1_down = scribble_density1
             scribble_density2_down = scribble_density2
 
-        # input1
-        plan = mask_transport(mask, unary1_torch_down, scribble_density1 is not None and scribble_density1_down or None,
+
+
+        # --- [修复 1] 确保传入 transport 的是单通道，并同步处理 input2 ---
+        if unary1_torch_down.dim() == 4 and unary1_torch_down.shape[1] > 1:
+            unary1_torch_down_input = unary1_torch_down.mean(dim=1, keepdim=True)
+        else:
+            unary1_torch_down_input = unary1_torch_down
+            
+        # 对 input2 (shuffled) 做同样的处理
+        unary2_torch_down_input = unary1_torch_down_input[indices]
+
+        # input1 transport
+        # --- [修复 2] 这里必须传 _input 后缀的变量，而不是原始变量 ---
+        plan = mask_transport(mask, unary1_torch_down_input, 
+                              scribble_density1_down if scribble1 is not None else None,
                               eps=t_eps, anchor_lambda=anchor_lambda)
         input1 = transport_image(input1, plan, batch_size, t_block_num, t_size)
 
-        # input2
-        plan = mask_transport(1 - mask, unary2_torch_down, scribble2 is not None and scribble_density2_down or None,
+        # input2 transport
+        # --- [修复 3] 同上，传 unary2_torch_down_input ---
+        plan = mask_transport(1 - mask, unary2_torch_down_input, 
+                              scribble_density2_down if scribble2 is not None else None,
                               eps=t_eps, anchor_lambda=anchor_lambda)
         input2 = transport_image(input2, plan, batch_size, t_block_num, t_size)
-
     # final mask and mixed ratio
     mask = F.interpolate(mask, size=width, mode='nearest')
     ratio = mask.reshape(batch_size, -1).mean(-1)

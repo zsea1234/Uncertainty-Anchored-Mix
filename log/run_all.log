@@ -1,0 +1,18 @@
+nohup: ignoring input
+========================================================
+Start Running Ablation Studies (Intermediate Models)
+Date: Wed Feb  4 08:12:30 AM UTC 2026
+========================================================
+Running Exp 2: Uncertainty Only...
+Terminated
+Exp 2 Finished. Log saved to log_exp2_unc_only.txt
+--------------------------------------------------------
+Running Exp 3: Uncertainty + Anchor...
+Terminated
+Exp 3 Finished. Log saved to log_exp3_unc_anchor.txt
+--------------------------------------------------------
+Running Exp 4: Uncertainty + URPC...
+Terminated
+Exp 4 Finished. Log saved to log_exp4_unc_urpc.txt
+========================================================
+All Ablation Studies Completed!

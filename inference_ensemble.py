@@ -12,16 +12,16 @@ from scipy import ndimage
 
 # ================= 🏆 最终决战：双尺度鲁棒版 🏆 =================
 CHECKPOINTS = [
-    '/data/MSCMR_cycleMix_Finetune_Seed888_Retrain/best_checkpoint.pth',
-    '/data/MSCMR_cycleMix_Finetune_Seed42_Retrain/best_checkpoint.pth',
-    '/data/MSCMR_cycleMix_PU/best_checkpoint.pth'
+    '/data/ACDC_cycleMix_Best_Run/best_checkpoint.pth',
+    '/data/ACDC_cycleMix_Seed888/best_checkpoint.pth',
+    '/data/ACDC_cycleMix_Seed42/best_checkpoint.pth'
 ]
 # 权重策略
 WEIGHTS = [0.35, 0.25, 0.40] 
 
-TEST_FOLDER = "/home/guest25/zyy/UnceternMix/MSCMR_dataset/val/images"
-LABEL_FOLDER = "/home/guest25/zyy/UnceternMix/MSCMR_dataset/val/labels"
-OUTPUT_FOLDER = "/home/guest25/zyy/UnceternMix/dataset_results/MSCMR_Ensemble_Final"
+TEST_FOLDER = "/home/guest25/zyy/Uncertainty-Anchored-Mix/ACDC_dataset/val/images"
+LABEL_FOLDER = "/home/guest25/zyy/Uncertainty-Anchored-Mix/ACDC_dataset/val/labels"
+OUTPUT_FOLDER = "/home/guest25/zyy/Uncertainty-Anchored-Mix/dataset_results/ACDC_Ensemble_Final"
 # ===============================================================
 
 def makefolder(folder):
@@ -77,7 +77,7 @@ def get_args_parser():
     parser.add_argument('--weight_decay', default=1e-4, type=float)
     parser.add_argument('--epochs', default=200, type=int)
     parser.add_argument('--lr_drop', default=200, type=int)
-    parser.add_argument('--model', default='MSCMR', required=False)
+    parser.add_argument('--model', default='ACDC', required=False)
     parser.add_argument('--in_channels', default=1, type=int)
     parser.add_argument('--device', default='cuda', type=str)
     parser.add_argument('--frozen_weights', type=str, default=None)
@@ -110,7 +110,7 @@ def get_args_parser():
     parser.add_argument('--Lv', default=1, type=float)
     parser.add_argument('--Myo', default=1, type=float)
     parser.add_argument('--Avg', default=1, type=float)
-    parser.add_argument('--dataset', default='MSCMR_dataset', type=str)
+    parser.add_argument('--dataset', default='ACDC_dataset', type=str)
     parser.add_argument('--output_dir', default='', help='')
     parser.add_argument('--dist_url', default='env://', help='')
     return parser
@@ -143,7 +143,7 @@ def predict_on_tensor(tensor, models, device):
 
 @torch.no_grad()
 def main_ensemble():
-    parser = argparse.ArgumentParser('MSCMR Ensemble', parents=[get_args_parser()])
+    parser = argparse.ArgumentParser('ACDC Ensemble', parents=[get_args_parser()])
     args = parser.parse_args()
     device = torch.device(args.device)
     
@@ -184,7 +184,7 @@ def main_ensemble():
     
     for file_index in range(len(test_files)):
         test_file = test_files[file_index]
-        label_file = test_file.replace(".nii.gz", "_manual.nii.gz")
+        label_file = test_file.replace(".nii.gz", "_gt.nii.gz")
         if not os.path.exists(os.path.join(LABEL_FOLDER, label_file)): continue
             
         print(f"\n--- Processing {test_file} ---")
